@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Error Page</title>
+    </h:head>
+    <h:body>
+        <p:messages severity="error"/>
+        <p:panel header="401-Unauthorized Access">
+            <p>You are not an authorized user. Please login to access this page.</p>
+            <p><a href="#{request.contextPath}/Login.jsf">Go to Login Page</a></p>
+        </p:panel>
+    </h:body>
+</html>
+
+<!--
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Error Page</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f2f2f2;
+            }
+            .error-container {
+                width: 500px;
+                margin: 0 auto;
+                margin-top: 50px;
+                background-color: #fff;
+                border-radius: 5px;
+                box-shadow: 0 1px 1px rgba(0,0,0,0.2);
+            }
+            .error-header {
+                background-color: #d9534f;
+                color: #fff;
+                text-align: center;
+                font-size: 24px;
+                padding: 20px;
+                border-top-left-radius: 5px;
+                border-top-right-radius: 5px;
+            }
+            .error-content {
+                padding: 20px;
+                text-align: center;
+                font-size: 18px;
+                color: #555;
+            }
+            .error-content a {
+                color: #d9534f;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <div class="error-container">
+            <div class="error-header">Error Message</div>
+            <div class="error-content">
+                <p>You are not an authorized user. Please login to access this page.</p>
+                <p><a href="#{request.contextPath}/login.xhtml">Go to Login Page</a></p>
+            </div>
+        </div>
+    </h:body>
+</html>-->
+
+
+
+<!--<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Unauthorized Access</title>
+        <style>
+            body {
+                background-color: #f5f5f5;
+                font-family: 'Roboto', sans-serif;
+            }
+            .error-container {
+                width: 80%;
+                margin: 0 auto;
+                padding: 50px;
+                text-align: center;
+                background-color: #fff;
+                border-radius: 10px;
+                box-shadow: 0 2px 5px rgba(0,0,0,.1);
+            }
+            .error-header {
+                font-size: 2.5rem;
+                font-weight: bold;
+                margin: 0 0 30px;
+            }
+            .error-message {
+                font-size: 1.5rem;
+                margin-bottom: 50px;
+            }
+            .error-link {
+                margin-top: 30px;
+            }
+            .error-link a {
+                background-color: #5f5fc4;
+                color: #fff;
+                font-size: 1.2rem;
+                font-weight: bold;
+                text-decoration: none;
+                padding: 10px 20px;
+                border-radius: 30px;
+                transition: background-color 0.3s ease;
+            }
+            .error-link a:hover {
+                background-color: #3737a3;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <div class="error-container">
+            <h1 class="error-header">Unauthorized Access</h1>
+            <p class="error-message">You are not authorized to access this page. Please contact the administrator for assistance.</p>
+            <div class="error-link">
+                <a href="#{request.contextPath}/login.xhtml">Login</a>
+            </div>
+        </div>
+    </h:body>
+</html>-->

@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+   
+    <h:head>
+        <title>Registration Page</title>
+         <style type="text/css">
+        #p_cardid{
+            width: 30rem;
+            margin-bottom: 2em;
+        }
+        .login-panel{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .form-container{
+            margin:2rem;
+        }
+        .form{
+            display: flex;
+            flex-direction: column;
+            gap:1rem;
+        }
+        input{
+            padding: 0.2rem;
+            width:100%;
+        }
+    </style>
+    </h:head>
+    <h:body>
+        <div class="login-panel">
+            <p:card id="p_cardid">
+                <f:facet name="title">
+                    Register A Business
+                </f:facet>
+
+                <div class="form-container">
+                    <h:form class="form" id="registrationForm">
+                        <div class="filed-container">
+                            <p:inputText id="businessName" placeholder="Enter Business Name" value="#{registerBean.businessName}"/>   
+                            <p:message for="businessName"/>
+                        </div>
+
+                        <div class="filed-container">
+                            <p:inputText id="ownerName" placeholder="Enter Business Owner Name" value="#{registerBean.businessOwnerName}"/>                            
+                            <p:message for="ownerName"/>
+                        </div>
+
+                        <div class="filed-container">
+                            <p:inputText id="businessAddress" placeholder="Enter Business Address" value="#{registerBean.businessAddress}"/>                            
+                            <p:message for="businessAddress"/>
+                        </div>
+
+                        <div class="filed-container">
+                            <p:inputText id="businessMobile" placeholder="Enter Mobile Number" value="#{registerBean.businessMobile}"/>    
+                            <p:message for="businessMobile"/>
+                        </div>
+
+                        <div class="filed-container">
+                            <p:inputText id="businessEmail" placeholder="Enter Email" type="email" value="#{registerBean.businessEmail}"/>      
+                            <p:message for="businessEmail"/>
+                        </div>
+
+                        <div class="filed-container">
+                            <p:password id="password" placeholder="Enter Password" value="#{registerBean.password}"/>
+                            <p:message for="password"/>
+                        </div>
+
+                        <div class="filed-container">
+                            <h:outputText id="err" style="color:red" value="#{registerBean.errorMessage}"/>
+                        </div>
+                        <div class="filed-container">
+                            <h:commandButton style="cursor: pointer;padding: 0.5rem" value="Register" action="#{registerBean.submit}"/>
+                        </div>
+                    </h:form>
+                </div>
+                <div class="links">
+                    already have account? <a href="Login.jsf">login here</a>
+                </div>
+            </p:card>
+        </div>
+    </h:body>
+</html>
+

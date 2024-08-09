@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Profile</title>
+        <style>
+            .center{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .form-container{
+                margin:2rem;
+                width: 30rem;
+            }
+            .form{
+                display: flex;
+                flex-direction: column;
+                gap:1rem;
+            }
+            input{
+                padding: 0.2rem;
+                width:100%;
+            }
+        </style>
+    </h:head>
+    <h:body>        
+        <h:form id="form">
+            <ui:include src="nav_bar.xhtml" />
+            
+            <div class="center">
+                <div class="form-container">
+                    <p:growl id="messages" showDetail="true" />
+
+                    <div class="filed-container">
+                        <p:inputText id="businessName" placeholder="Enter Business Name" value="#{profileBean.businessName}"/>   
+                        <p:message for="businessName" style="margin-top: 10px"/>
+                    </div>
+
+                    <div class="filed-container" style="margin-top: 10px">
+                        <p:inputText id="ownerName" placeholder="Enter Business Owner Name" value="#{profileBean.businessOwnerName}"/>                            
+                        <p:message for="ownerName" style="margin-top: 10px"/>
+                    </div>
+
+                    <div class="filed-container" style="margin-top: 10px">
+                        <p:inputText id="businessAddress" placeholder="Enter Business Address" value="#{profileBean.businessAddress}"/>                            
+                        <p:message for="businessAddress" style="margin-top: 10px"/>
+                    </div>
+
+                    <div class="filed-container" style="margin-top: 10px">
+                        <p:inputText id="businessMobile" placeholder="Enter Mobile Number" value="#{profileBean.businessMobile}"/>    
+                        <p:message for="businessMobile" style="margin-top: 10px"/>
+                    </div>
+
+                    <div class="filed-container" style="margin-top: 10px">
+                        <p:inputText id="businessEmail" placeholder="Enter Email" type="email" value="#{profileBean.businessEmail}"/>      
+                        <p:message for="businessEmail" style="margin-top: 10px"/>
+                    </div>
+
+                    <div class="filed-container" style="margin-top: 10px">
+                        <h:outputText id="err" style="color:red" value="#{profileBean.errorMessage}"/>
+                    </div>
+                    <div class="filed-container" style="margin-top: 10px">
+                        <h:commandButton style="cursor: pointer;padding: 0.5rem" value="Update" action="#{profileBean.updateProfile}"/>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </h:body>
+</html>
+

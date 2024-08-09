@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Profile</title>
+        <style>
+            .center{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .form-container{
+                margin:2rem;
+                width: 30rem;
+            }
+            .form{
+                display: flex;
+                flex-direction: column;
+                gap:1rem;
+            }
+            input{
+                padding: 0.2rem;
+                width:100%;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <h:form id="form">
+            <div class="center">
+                <div class="form-container">
+                    <p:growl id="messages" showDetail="true" />
+
+                    <div class="filed-container">
+                        <p:inputText id="customerName" placeholder="Enter Your Name" value="#{customer.username}"/>   
+                        <p:message for="customerName" style="margin-top: 10px"/>
+                    </div>
+
+                    <div class="filed-container" style="margin-top: 10px">
+                        <p:inputText id="customerEmail" placeholder="Enter Email" value="#{customer.email}"/>                            
+                        <p:message for="customerEmail" style="margin-top: 10px"/>
+                    </div>
+
+                    <div class="filed-container" style="margin-top: 10px">
+                        <p:selectOneMenu id="societyName" value="#{customer.selectedSocietyId}"  style="width:250px">
+                            <!--<p:ajax listener="#{indexBean.onSocietyChange}"/>-->
+                            <f:ajax execute="@form" render="@form" />
+                            <f:selectItem itemLabel="Select Society" itemValue="" noSelectionOption="true"/>
+                            <f:selectItems value="#{indexBean.societies}" var="society" itemLabel="#{society.name}" itemValue="#{society.id}"/>
+                        </p:selectOneMenu>
+                        <p:message for="societyName" style="margin-top: 10px"/>
+                    </div>
+                    
+                    <div class="filed-container" style="margin-top: 40px">
+                        <p:inputText id="customerHouseNo" placeholder="Enter House Number" value="#{customer.houseNo}"/>                            
+                        <p:message for="customerHouseNo" style="margin-top: 10px"/>
+                    </div>
+
+                    <div class="filed-container" style="margin-top: 10px">
+                        <p:inputText id="customerMobile" placeholder="Enter Mobile Number" value="#{customer.mobileNo}"/>    
+                        <p:message for="customerMobile" style="margin-top: 10px"/>
+                    </div>
+
+                    <div class="filed-container" style="margin-top: 10px">
+                        <h:outputText id="err" style="color:red" value="#{customer.errorMessage}"/>
+                    </div>
+                    <div class="filed-container" style="margin-top: 10px">
+                        <h:commandButton style="cursor: pointer;padding: 0.5rem" value="Update" action="#{customer.updateProfile}"/>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </h:body>
+</html>
+

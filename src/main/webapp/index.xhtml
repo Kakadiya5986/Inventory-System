@@ -1,0 +1,136 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <title>Dashboard</title>
+    </h:head>
+    <h:body>        
+        <div class="card crud-demo">
+            <h:form id="form">
+                <p:growl id="messages" showDetail="true" />
+                <p:menubar>
+                    <p:menuitem value="${businessOwner.businessName}" icon="pi pi-fw pi-user"  outcome="index.jsf"/>
+
+                    <p:divider layout="vertical"/>
+
+                    <c:if test="#{indexBean.businessOwner}" >
+                        <p:menuitem value="Profile" outcome="/Navbar/profile.jsf" />
+                    </c:if>
+
+                    <p:menuitem value="Products" outcome="/Navbar/products.jsf"/>
+
+                    <p:menuitem value="Societies" outcome="/Navbar/societies.jsf"/>
+
+                    <c:if test="#{indexBean.businessOwner}" >
+                        <p:menuitem value="Employees" outcome="/Navbar/employees.jsf"/>
+                    </c:if>
+
+                    <p:menuitem value="Customers" outcome="/Navbar/customers.jsf"/>
+
+                    <f:facet name="options">
+                        <p:button value="Logout" icon="pi pi-fw pi-sign-out" styleClass="ui-button-danger" outcome="/Logout.jsf"/>
+                    </f:facet>
+                </p:menubar>
+
+                <p:toolbar style="margin-top: .5rem">
+                    <p:toolbarGroup>
+                        <p:selectOneMenu id="societyName" value="#{indexBean.selectedSocietyId}"  style="width:250px">
+                            <p:ajax listener="#{indexBean.onSocietyChange}"/>
+                            <f:ajax execute="@form" render="@form" />
+                            <f:selectItem itemLabel="Select Society" itemValue="" noSelectionOption="true"/>
+                            <f:selectItems value="#{indexBean.societies}" var="society" itemLabel="#{society.name}" itemValue="#{society.id}"/>
+                        </p:selectOneMenu>
+                    </p:toolbarGroup>
+                </p:toolbar>
+
+                <p:dataTable id="dt-products" style="margin-top: .5rem" widgetVar="dtProducts" var="cust" value="#{indexBean.customers}"
+                             reflow="true" styleClass="products-table"
+                             rowKey="#{cust.id}" paginator="true" rows="10" paginatorPosition="bottom">
+                    <f:facet name="header">
+                        <div class="products-table-header">
+                            <span style="font-weight: bold; margin-right: .5rem">CUSTOMERS</span>
+                            <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i>
+                                <p:inputText id="globalFilter" onkeyup="PF('dtProducts').filter()" placeholder="Search" />
+                            </span>
+                        </div>
+                    </f:facet>
+
+                    <p:column headerText="Code" sortBy="#{cust.id}" filterBy="#{cust.id}">
+                        <h:outputText value="#{cust.id}" />
+                    </p:column>
+
+                    <p:column headerText="Name" sortBy="#{cust.username}" filterBy="#{cust.username}">
+                        <h:outputText value="#{cust.username}" />
+                    </p:column>
+
+                    <p:column headerText="House No." sortBy="#{cust.houseNo}" filterBy="#{cust.houseNo}">
+                        <h:outputText value="#{cust.houseNo}" />
+                    </p:column>
+
+                    <p:column headerText="Email" sortBy="#{cust.email}" filterBy="#{cust.email}">
+                        <h:outputText value="#{cust.email}" />
+                    </p:column>
+
+                    <p:column headerText="Mobile No." sortBy="#{cust.mobileNo}" filterBy="#{cust.mobileNo}">
+                        <h:outputText value="#{cust.mobileNo}" />
+                    </p:column>
+
+                    <p:column headerText="Status">
+                        <h:panelGroup rendered="#{cust.deliveryCollection.size() == 0}">
+                            <p:tag styleClass="mr-2" severity="warning" value="Pending"></p:tag>
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{cust.deliveryCollection.size() != 0}">
+                            <p:tag styleClass="mr-2" severity="success" value="Delivered"></p:tag>
+                        </h:panelGroup>
+                    </p:column>
+
+                    <p:column exportable="false">
+                        <p:commandButton icon="pi pi-shopping-bag" update=":dialogs:manage-product-content"
+                                         oncomplete="PF('manageProductDialog').show()" 
+                                         class="ui-button-primary rounded-button" process="@this">
+                            <f:setPropertyActionListener value="#{cust.deliveryCollection[0].delivereditemCollection}" target="#{indexBean.deliveryProducts}" />
+                            <f:setPropertyActionListener value="#{cust.deliveryCollection[0].id}" target="#{indexBean.selectedDeliveryId}" />
+                            <f:setPropertyActionListener value="#{cust.id}" target="#{indexBean.selectedCustomerId}" />
+                            <p:resetInput target=":dialogs:manage-product-content" />
+                        </p:commandButton>
+                    </p:column>
+
+                </p:dataTable>
+            </h:form>  
+
+            <h:form id="dialogs">
+                <p:dialog header="Deliver Products" showEffect="fade" modal="true" widgetVar="manageProductDialog"
+                          responsive="true">
+
+                    <p:outputPanel id="manage-product-content" class="ui-fluid">
+                        <ui:repeat value="#{indexBean.deliveryProducts}" var="item">
+                            <div style="display: flex; justify-content: space-between; padding-bottom: 15px">
+                                <div style="flex-grow: 1;">
+                                    <h:outputText value="#{item.name} (₹ #{item.price})" style="padding-left: 10px; padding-right: 10px; font-size: 20px" />
+                                </div>
+                                <div>
+                                    <p:commandButton icon="pi pi-minus" styleClass="rounded-button" actionListener="#{indexBean.decreaseQuantity(item)}" update="itemQuantity"/>
+                                    <h:outputText id="itemQuantity" value="#{item.quantity}" style="padding-left: 10px; padding-right: 10px; font-size: 25px" />
+                                    <p:commandButton icon="pi pi-plus" styleClass="rounded-button ui-button-danger" actionListener="#{indexBean.increaseQuantity(item)}" update="itemQuantity"/>
+                                </div>
+                            </div>
+                        </ui:repeat>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Deliver" icon="pi pi-check" actionListener="#{indexBean.addUpdateDelivery}"
+                                         update="manage-product-content" process="manage-product-content @this" />
+                        <p:commandButton value="Delete" icon="pi pi-times" actionListener="#{indexBean.deleteDelivery}"
+                                         class="ui-button-danger" process="manage-product-content @this" />
+                    </f:facet>
+                </p:dialog>
+            </h:form>
+        </div>
+    </h:body>
+</html>
+

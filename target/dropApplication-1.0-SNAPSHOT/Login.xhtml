@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">-->
+<!--<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <h:head>
+        <title>Login Page</title>
+    </h:head>
+    <h:body>
+
+        <form method="POST">
+            <table border="1">
+                <tr>  
+                    <td>User Name</td> <td><input type="text" name="username"  value=""/></td></tr>
+
+                <tr>   <td>Password </td> <td><input type="password" name="password" value=""/></td></tr>
+                <tr><td><input type="submit" value="Login"/></td><td><input type="reset" value="Reset"/></td></tr>
+
+            </table>
+        </form>
+        <br/>
+        <h:outputText id="err" style="color:red" value="#{loginBean.errorStatus}"/>
+    </h:body>
+</html>-->
+
+
+
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Login Page</title>
+        <style>
+            .login-panel{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .form-container{
+                margin:2rem;
+            }
+            form{
+                display: flex;
+                flex-direction: column;
+                gap:1rem;
+            }
+            input{
+                padding: 0.5rem;
+                width:100%;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <div class="login-panel">
+            <p:card style="width: 25rem; margin-bottom: 2em">
+                <f:facet name="title">
+                    Login
+                </f:facet>
+
+                <div class="form-container">
+                    <form method="POST">
+                        <div class="filed-container">
+                            <input type="text" placeholder="Enter Username" name="username" required="true"/>
+                        </div>
+
+                        <div class="filed-container">
+                            <input type="password" placeholder="Enter Password" name="password" required="true"/>
+                        </div>
+
+                        <div class="filed-container">
+                            <h:outputText id="err" style="color:red" value="#{loginBean.errorStatus}"/>
+                        </div>
+                        <div class="filed-container">
+                            <input type="submit" value="Log in" />
+                        </div>
+                    </form>
+                </div>
+
+                <div class="links">
+                    not registered yet? <a href="Register.jsf">register here</a>
+                </div>
+
+            </p:card>
+        </div>
+
+
+    </h:body>
+</html>
+
+
+

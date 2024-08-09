@@ -1,0 +1,172 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Customers</title>
+    </h:head>
+    <h:body>
+        <div class="card crud-demo">
+            <h:form id="form">
+                <ui:include src="nav_bar.xhtml" />
+                
+                <p:growl id="messages" showDetail="true" />
+
+                <p:toolbar  style="margin-top: .5rem">
+                    <p:toolbarGroup>
+                        <p:commandButton value="New" icon="pi pi-plus" actionListener="#{customersBean.openNew}"
+                                         update=":dialogs:manage-product-content" oncomplete="PF('manageProductDialog').show()"
+                                         styleClass="ui-button-success" style="margin-right: .5rem">
+                            <p:resetInput target=":dialogs:manage-product-content" />
+                        </p:commandButton>
+                        <p:commandButton id="delete-products-button" value="#{customersBean.deleteButtonMessage}"
+                                         icon="pi pi-trash" actionListener="#{customersBean.deleteSelectedCustomers}"
+                                         styleClass="ui-button-danger" disabled="#{!customersBean.hasSelectedCustomers()}" update="@this">
+                            <p:confirm header="Confirmation" message="Delete the selected customers?"
+                                       icon="pi pi-exclamation-triangle" />
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
+
+                <p:dataTable id="dt-products" style="margin-top: .5rem" widgetVar="dtProducts" var="cust" value="#{customersBean.customers}"
+                             reflow="true" styleClass="products-table" selection="#{customersBean.selectedCustomers}"
+                             rowKey="#{cust.id}" paginator="true" rows="10" rowSelectMode="add" paginatorPosition="bottom">
+                    <f:facet name="header">
+                        <div class="products-table-header">
+                            <span style="font-weight: bold; margin-right: .5rem">CUSTOMERS</span>
+                            <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i>
+                                <p:inputText id="globalFilter" onkeyup="PF('dtProducts').filter()" placeholder="Search" />
+                            </span>
+                        </div>
+                    </f:facet>
+
+                    <p:ajax event="rowSelect" update=":form:delete-products-button" />
+                    <p:ajax event="rowUnselect" update=":form:delete-products-button" />
+                    <p:ajax event="rowSelectCheckbox" update=":form:delete-products-button" />
+                    <p:ajax event="rowUnselectCheckbox" update=":form:delete-products-button" />
+                    <p:ajax event="toggleSelect" update=":form:delete-products-button" />
+
+                    <p:column selectionMode="multiple" exportable="false"></p:column>
+
+                    <p:column headerText="Code" sortBy="#{cust.id}" filterBy="#{cust.id}">
+                        <h:outputText value="#{cust.id}" />
+                    </p:column>
+
+                    <p:column headerText="Name" sortBy="#{cust.username}" filterBy="#{cust.username}">
+                        <h:outputText value="#{cust.username}" />
+                    </p:column>
+
+                    <p:column headerText="Society Name" sortBy="#{cust.societyId.name}" filterBy="#{cust.societyId.name}">
+                        <h:outputText value="#{cust.societyId.name}" />
+                    </p:column>
+
+                    <p:column headerText="House No." sortBy="#{cust.houseNo}" filterBy="#{cust.houseNo}">
+                        <h:outputText value="#{cust.houseNo}" />
+                    </p:column>
+
+                    <p:column headerText="Email" sortBy="#{cust.email}" filterBy="#{cust.email}">
+                        <h:outputText value="#{cust.email}" />
+                    </p:column>
+
+                    <p:column headerText="Mobile No." sortBy="#{cust.mobileNo}" filterBy="#{cust.mobileNo}">
+                        <h:outputText value="#{cust.mobileNo}" />
+                    </p:column>
+
+                    <p:column exportable="false">
+                        <p:commandButton icon="pi pi-pencil" style="margin-right: .5rem" update=":dialogs:manage-product-content"
+                                         oncomplete="PF('manageProductDialog').show()"
+                                         styleClass="edit-button rounded-button ui-button-success" process="@this">
+                            <f:setPropertyActionListener value="#{cust}" target="#{customersBean.selectedCustomer}" />
+                            <p:resetInput target=":dialogs:manage-product-content" />
+                        </p:commandButton>
+                        <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash"
+                                         process="@this"
+                                         oncomplete="PF('deleteProductDialog').show()">
+                            <f:setPropertyActionListener value="#{cust}" target="#{customersBean.selectedCustomer}" />
+                        </p:commandButton>
+                    </p:column>
+
+                </p:dataTable>
+            </h:form>
+
+            <h:form id="dialogs">
+                <p:dialog header="Customer Details" showEffect="fade" modal="true" widgetVar="manageProductDialog"
+                          responsive="true">
+                    <p:outputPanel id="manage-product-content" class="ui-fluid">
+                        <p:outputPanel rendered="#{not empty customersBean.selectedCustomer}">
+
+                            <div class="field">
+                                <p:outputLabel for="name">Name</p:outputLabel>
+                                <p:inputText id="name" value="#{customersBean.selectedCustomer.username}" required="true" />
+                            </div>
+
+                            <div class="field" style="margin-top: 10px">
+                                <h:panelGrid>
+                                    <p:outputLabel for="societyName">Society Name</p:outputLabel>
+                                    <p:selectOneMenu id="societyName" value="#{customersBean.selectedSocietyId}" style="width:410px">
+                                        <f:selectItem itemLabel="Select Society" itemValue="" noSelectionOption="true"/>
+                                        <f:selectItems value="#{customersBean.societies}" var="society" itemLabel="#{society.name}" itemValue="#{society.id}"/>
+                                    </p:selectOneMenu>
+                                </h:panelGrid>
+                            </div>
+
+                            <div class="field" style="margin-top: 10px">
+                                <p:outputLabel for="houseNo">House No.</p:outputLabel>
+                                <p:inputText id="houseNo" value="#{customersBean.selectedCustomer.houseNo}" required="true" />
+                            </div>
+
+                            <div class="field" style="margin-top: 10px">
+                                <p:outputLabel for="email">Email</p:outputLabel>
+                                <p:inputText id="email" value="#{customersBean.selectedCustomer.email}" required="true" />
+                            </div>
+
+                            <div class="field" style="margin-top: 10px">
+                                <p:outputLabel for="mobileNo">Mobile Number</p:outputLabel>
+                                <p:inputText id="mobileNo" value="#{customersBean.selectedCustomer.mobileNo}" required="true" />
+                            </div>
+
+                            <c:if test="#{customersBean.selectedCustomer.getId() == null}">
+                                <div class="field" style="margin-top: 10px">
+                                    <p:outputLabel for="password">Password</p:outputLabel>
+                                    <p:password id="password" value="#{customersBean.selectedCustomer.password}" required="true" feedback="true" toggleMask="true" redisplay="true"/>
+                                </div>
+                            </c:if>
+
+                            <div class="filed-container" style="margin-top: 10px">
+                                <h:outputText id="err" style="color:red" value="#{customersBean.errorMessage}"/>
+                            </div>
+
+                        </p:outputPanel>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Save" icon="pi pi-check" actionListener="#{customersBean.saveCustomer}"
+                                         update="manage-product-content" process="manage-product-content @this" />
+                        <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageProductDialog').hide()"
+                                         class="ui-button-secondary" type="button" />
+                    </f:facet>
+                </p:dialog>
+
+                <p:confirmDialog widgetVar="deleteProductDialog" showEffect="fade" width="300"
+                                 message="Delete the customer?" header="Confirm" severity="warn">
+                    <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{customersBean.deleteCustomer}"
+                                     process="@this" update=":form:delete-products-button"
+                                     oncomplete="PF('deleteProductDialog').hide()" />
+                    <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                                     onclick="PF('deleteProductDialog').hide()" />
+                </p:confirmDialog>
+
+                <p:confirmDialog global="true" showEffect="fade" width="300">
+                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
+                                     icon="pi pi-times" />
+                </p:confirmDialog>
+            </h:form>
+        </div>
+    </h:body>
+</html>
+

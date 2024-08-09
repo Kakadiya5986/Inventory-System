@@ -1,0 +1,144 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Employees</title>
+    </h:head>
+    <h:body>
+        <div class="card crud-demo">
+            <h:form id="form">
+                <ui:include src="nav_bar.xhtml" />
+                
+                <p:growl id="messages" showDetail="true" />
+
+                <p:toolbar  style="margin-top: .5rem">
+                    <p:toolbarGroup>
+                        <p:commandButton value="New" icon="pi pi-plus" actionListener="#{employeesBean.openNew}"
+                                         update=":dialogs:manage-product-content" oncomplete="PF('manageProductDialog').show()"
+                                         styleClass="ui-button-success" style="margin-right: .5rem">
+                            <p:resetInput target=":dialogs:manage-product-content" />
+                        </p:commandButton>
+                        <p:commandButton id="delete-products-button" value="#{employeesBean.deleteButtonMessage}"
+                                         icon="pi pi-trash" actionListener="#{employeesBean.deleteSelectedEmployees}"
+                                         styleClass="ui-button-danger" disabled="#{!(employeesBean.hasSelectedEmployees)}" update="@this">
+                            <p:confirm header="Confirmation" message="Delete the selected employees?"
+                                       icon="pi pi-exclamation-triangle" />
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
+
+                <p:dataTable id="dt-products" style="margin-top: .5rem" widgetVar="dtProducts" var="employee" value="#{employeesBean.employees}"
+                             reflow="true" styleClass="products-table" selection="#{employeesBean.selectedEmployees}"
+                             rowKey="#{employee.id}" paginator="true" rows="10" rowSelectMode="add" paginatorPosition="bottom">
+                    <f:facet name="header">
+                        <div class="products-table-header">
+                            <span style="font-weight: bold; margin-right: .5rem">EMPLOYEES</span>
+                            <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i>
+                                <p:inputText id="globalFilter" onkeyup="PF('dtProducts').filter()" placeholder="Search" />
+                            </span>
+                        </div>
+                    </f:facet>
+
+                    <p:ajax event="rowSelect" update=":form:delete-products-button" />
+                    <p:ajax event="rowUnselect" update=":form:delete-products-button" />
+                    <p:ajax event="rowSelectCheckbox" update=":form:delete-products-button" />
+                    <p:ajax event="rowUnselectCheckbox" update=":form:delete-products-button" />
+                    <p:ajax event="toggleSelect" update=":form:delete-products-button" />
+
+                    <p:column selectionMode="multiple" exportable="false"></p:column>
+
+                    <p:column headerText="Code" sortBy="#{employee.id}" filterBy="#{employee.id}">
+                        <h:outputText value="#{employee.id}" />
+                    </p:column>
+
+                    <p:column headerText="Name" sortBy="#{employee.username}" filterBy="#{employee.username}">
+                        <h:outputText value="#{employee.username}" />
+                    </p:column>
+
+                    <p:column headerText="Email" sortBy="#{employee.email}" filterBy="#{employee.email}">
+                        <h:outputText value="#{employee.email}" />
+                    </p:column>
+
+                    <p:column headerText="Mobile No." sortBy="#{employee.mobileNo}" filterBy="#{employee.mobileNo}">
+                        <h:outputText value="#{employee.mobileNo}" />
+                    </p:column>
+
+                    <p:column exportable="false">
+                        <p:commandButton icon="pi pi-pencil" style="margin-right: .5rem" update=":dialogs:manage-product-content"
+                                         oncomplete="PF('manageProductDialog').show()"
+                                         styleClass="edit-button rounded-button ui-button-success" process="@this">
+                            <f:setPropertyActionListener value="#{employee}" target="#{employeesBean.selectedEmployee}" />
+                            <p:resetInput target=":dialogs:manage-product-content" />
+                        </p:commandButton>
+                        <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash"
+                                         process="@this"
+                                         oncomplete="PF('deleteProductDialog').show()">
+                            <f:setPropertyActionListener value="#{employee}" target="#{employeesBean.selectedEmployee}" />
+                        </p:commandButton>
+                    </p:column>
+
+                </p:dataTable>
+            </h:form>
+
+            <h:form id="dialogs">
+                <p:dialog header="Employee Details" showEffect="fade" modal="true" widgetVar="manageProductDialog"
+                          responsive="true">
+                    <p:outputPanel id="manage-product-content" class="ui-fluid">
+                        <p:outputPanel rendered="#{not empty employeesBean.selectedEmployee}">
+
+                            <div class="field">
+                                <p:outputLabel for="name">Name</p:outputLabel>
+                                <p:inputText id="name" value="#{employeesBean.selectedEmployee.username}" required="true" />
+                            </div>
+                            <div class="field" style="margin-top: 10px">
+                                <p:outputLabel for="email">Email</p:outputLabel>
+                                <p:inputText id="email" value="#{employeesBean.selectedEmployee.email}" required="true" />
+                            </div>
+                            <div class="field" style="margin-top: 10px">
+                                <p:outputLabel for="mobileNo">Mobile Number</p:outputLabel>
+                                <p:inputText id="mobileNo" value="#{employeesBean.selectedEmployee.mobileNo}" required="true" />
+                            </div>
+                            <c:if test="#{employeesBean.selectedEmployee.getId() == null}">
+                                <div class="field" style="margin-top: 10px">
+                                    <p:outputLabel for="password">Password</p:outputLabel>
+                                    <p:password id="password" value="#{employeesBean.selectedEmployee.password}" required="true" feedback="true" toggleMask="true" redisplay="true"/>
+                                </div>
+                            </c:if>
+                            <div class="filed-container" style="margin-top: 10px">
+                                <h:outputText id="err" style="color:red" value="#{employeesBean.errorMessage}"/>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Save" icon="pi pi-check" actionListener="#{employeesBean.saveEmployee}"
+                                         update="manage-product-content" process="manage-product-content @this" />
+                        <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageProductDialog').hide()"
+                                         class="ui-button-secondary" type="button" />
+                    </f:facet>
+                </p:dialog>
+
+                <p:confirmDialog widgetVar="deleteProductDialog" showEffect="fade" width="300"
+                                 message="Delete the employee?" header="Confirm" severity="warn">
+                    <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{employeesBean.deleteEmployee}"
+                                     process="@this" update=":form:delete-products-button"
+                                     oncomplete="PF('deleteProductDialog').hide()" />
+                    <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                                     onclick="PF('deleteProductDialog').hide()" />
+                </p:confirmDialog>
+
+                <p:confirmDialog global="true" showEffect="fade" width="300">
+                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
+                                     icon="pi pi-times" />
+                </p:confirmDialog>
+            </h:form>
+        </div>
+    </h:body>
+</html>
+
